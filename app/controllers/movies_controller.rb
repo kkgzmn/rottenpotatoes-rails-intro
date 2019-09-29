@@ -9,9 +9,21 @@ class MoviesController < ApplicationController
     @movie = Movie.find(id) # look up movie by unique ID
     # will render app/views/movies/show.<extension> by default
   end
-
+  
+  # Part 1: alter to sort the movies by: Release date in ascending order OR alphabetically
   def index
     @movies = Movie.all
+    # if "title" is passed then highlight it and sort Alphabetically 
+    if params[:sortMoviesBy] == "title"
+      # CSS link to hilite the title 
+      @highlightMovie = "hilite"
+      @movies = Movie.order('title ASC');
+    # if "date" is passed then hihglight it and sort Alphabetically
+    elsif params[:sortMoviesBy] == "date"
+      # CSS link to hilite the title 
+      @highlightDate = "hilite"
+      @movies = Movie.order('release_date ASC');
+  end
   end
 
   def new
