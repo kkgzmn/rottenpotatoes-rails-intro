@@ -10,20 +10,31 @@ class MoviesController < ApplicationController
     # will render app/views/movies/show.<extension> by default
   end
   
-  # Part 1: alter to sort the movies by: Release date in ascending order OR alphabetically
   def index
     @movies = Movie.all
-    # if "title" is passed then highlight it and sort Alphabetically 
-    if params[:sortMoviesBy] == "title"
-      # CSS link to hilite the title 
-      @highlightMovie = "hilite"
+  # Part 1: alter to sort the movies by: Release date in ascending order OR alphabetically
+  # if "title" is passed then highlight it and sort Alphabetically
+    session[:sortMoviesBy] = params[:sortMoviesBy]
+    if session[:sortMoviesBy] == "title"
+      @highlightMovie = "hilite"  # CSS link to hilite the title 
       @movies = Movie.order('title ASC');
-    # if "date" is passed then hihglight it and sort Alphabetically
-    elsif params[:sortMoviesBy] == "date"
-      # CSS link to hilite the title 
+  # if "date" is passed then hihglight it and sort Alphabetically
+    elsif session[:sortMoviesBy] == "date"
       @highlightDate = "hilite"
       @movies = Movie.order('release_date ASC');
-  end
+    end
+    
+  # Part 2: Movie Ratings Checkbox Filter
+    @all_ratings = Movie.all_ratings()
+    unless params[:ratings].nil?
+      @ratings_keys = params[:ratings].keys
+      flash[:notice] = params[:ratings]
+      session[:ratings_keys] = @ratings_keys
+    end
+  # Filter out the movies
+    if session[:ratings_keys]
+       @movies = @movies.select{ |movie| session[:ratings_keys].include? movie.rating }
+    end
   end
 
   def new
