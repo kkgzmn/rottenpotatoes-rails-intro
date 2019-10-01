@@ -28,7 +28,6 @@ class MoviesController < ApplicationController
     @all_ratings = Movie.all_ratings()
     unless params[:ratings].nil?
       @ratings_keys = params[:ratings].keys
-      flash[:notice] = params[:ratings]
       session[:ratings_keys] = @ratings_keys
     end
   # Filter out the movies
